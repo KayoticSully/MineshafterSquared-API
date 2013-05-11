@@ -15,7 +15,8 @@
         "url": "https://github.com/KayoticSully/MineshafterSquared-API.git"
     },
     "dependencies": {
-        "sequelize" : "1.7.x"
+        "sequelize" : "1.7.x",
+        "express": "3.x"
     },
     "engines": {
         "node": ">=0.10"
