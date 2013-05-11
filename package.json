@@ -1,0 +1,23 @@
+{
+    "name": "Mineshafer-Squard-API",
+    "preferGlobal": false,
+    "version": "0.0.1",
+    "author": "Ryan Sullivan <kayoticsully@gmail.com>",
+    "description": "A simple Node API for Mineshafter Squared Authentication",
+    "contributors": [],
+    "bin": {},
+    "scripts": {
+        
+    },
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/KayoticSully/MineshafterSquared-API.git"
+    },
+    "dependencies": {
+        "sequelize" : "1.7.x"
+    },
+    "engines": {
+        "node": ">=0.10"
+    }
+}
