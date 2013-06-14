@@ -27,6 +27,7 @@ var app = express();
 app.set('port', process.env.PORT || APP_PORT);
 app.use(express.logger('dev'));
 app.use(app.router);
+app.db = {};
 
 //Development only.
 if ('development' == app.get('env')) {
@@ -45,6 +46,7 @@ models.forEach(function (file) {
   var filePath  = path.resolve('./', MODEL_DIR, file);
   var modelName = path.basename(filePath, '.js');
   var model = sequelize.import(filePath);
+  app.db[modelName] = model;
 });
 
 /**
