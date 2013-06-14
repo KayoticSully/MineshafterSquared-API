@@ -3,8 +3,8 @@
  */
 const
     ROUTE_DIR = 'routes',
+    MODEL_DIR = 'models',
     APP_PORT  = 80;
-
 
 /**
  * Module dependencies.
@@ -18,7 +18,7 @@ var
     config    = require('./config'),
     // Other
     routes    = fs.readdirSync(ROUTE_DIR),
-    sequelize = new Sequelize(config.db.host, config.db.user, config.db.password);
+    models    = fs.readdirSync(MODEL_DIR);
 
 /**
  * Basic setup.
@@ -32,6 +32,20 @@ app.use(app.router);
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+/**
+ * Sequelize Setup
+ */
+var sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
+  host : config.db.host
+});
+
+// Database Models
+models.forEach(function (file) {
+  var filePath  = path.resolve('./', MODEL_DIR, file);
+  var modelName = path.basename(filePath, '.js');
+  var model = sequelize.import(filePath);
+});
 
 /**
  * API Calls.

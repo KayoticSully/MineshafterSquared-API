@@ -16,7 +16,8 @@
     },
     "dependencies": {
         "sequelize" : "1.7.x",
-        "express": "3.x"
+        "express": "3.x",
+        "mysql": "~2.0.0-alpha7"
     },
     "engines": {
         "node": ">=0.10"
