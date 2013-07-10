@@ -1,10 +1,10 @@
 {
     "database" : {
-        "username": "ms2primeuser",
-        "password": "aWLnysvsVt6nuBdYjdZgCpOX6boI6Xt3dKDJvGPxoKcRCg0PNLx8llMni61DLWF",
-        "name": "Mineshafter-Squared-Prime",
+        "username": "DB User",
+        "password": "DB Password",
+        "name": "DB Name",
         "options" : {
-            "host" : "e213168a187703113e2cf4c3c26e1270ebefc329.rackspaceclouddb.com"
+            "host" : "Host Address"
         }
     },
     
