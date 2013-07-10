@@ -20,7 +20,6 @@ app.set('port', process.env.PORT || config.port);
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(app.router);
-app.db = {};
 
 /**
  * Development only.

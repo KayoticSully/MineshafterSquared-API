@@ -26,22 +26,24 @@ module.exports = function(sequelize, DataTypes) {
                 var user = null;
                 
                 // Try and find user's record
-                //this.find({ where : [ 'email = ? OR username = ?', username, username] })
-                //    .success(function(user){
-                //        if (user !== null) {
-                //            var valid_user = user.validate_password(password);
-                //            
-                //            // generate session id upon correct login
-                //            valid_user.generate_session_id(function(sess_id){
-                //            //    valid_user.session = sess_id;
-                //                callback(valid_user);
-                //            });
-                //            callback(valid_user);
-                //        } else {
-                //            callback(null);
-                //        }
-                //    })
-                //;
+                this.find({ where : [ 'email = ? OR username = ?', username, username] })
+                    .success(function(user){
+                        if (user !== null) {
+                            var valid_user = user.validate_password(password);
+                            
+                            if (valid_user !== null) {
+                                // generate session id upon correct login
+                                var session_id = valid_user.generate_session_id();
+                                valid_user.session = session_id;
+                                valid_user.save().success(callback);
+                            }
+                        } else {
+                            callback(null);
+                        }
+                    }).error(function(error) {
+                        callback(null);
+                    });
+                ;
             }
         },
         
@@ -67,9 +69,7 @@ module.exports = function(sequelize, DataTypes) {
                 var idPt2 = Math.floor(Math.random() * 2147483647) + 1000000000;
                 var id = idPt1 + idPt2;
                 
-                console.log(sequelize);
-                
-                callback(id);
+                return id;
             }   
         },
 

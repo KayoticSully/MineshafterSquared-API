@@ -24,11 +24,13 @@ exports.init = function(app) {
      *       memory hog, or might make no difference what so ever.
      *       Just something to keep in mind
      */
+    var Data = app.get('models').Data;
+    var User = app.get('models').User;
     
     // Version
     function version(request, response){
         // get client version
-        app.db.Data.find({ where: { key : 'client-version' } }).success(function(data){
+        Data.find({ where: { key : 'client-version' } }).success(function(data){
             response.send(data.value);
         });
     }
@@ -38,14 +40,12 @@ exports.init = function(app) {
         var username = request.body.user;
         var password = request.body.password;
         
-        app.db.User.login(username, password, function(user){
-            console.log(user.username);
+        User.login(username, password, function(user){
             if (user) {
-                console.log(user.session);
-                response.send(user.session);
+                response.send(''+user.session);
             } else {
                 response.send('bad login');
-            }
+            }   
         });
     }
 }
