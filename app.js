@@ -1,10 +1,5 @@
-/**
- * App Constants
- */
-const
-    ROUTE_DIR = 'routes',
-    MODEL_DIR = 'models',
-    APP_PORT  = 80;
+// Announce
+console.log('Booting Mineshafter Squared API');
 
 /**
  * Module dependencies.
@@ -14,48 +9,43 @@ var
     fs        = require('fs'),
     path      = require('path'),
     express   = require('express'),
-    Sequelize = require('sequelize'),
-    config    = require('./config'),
-    // Other
-    routes    = fs.readdirSync(ROUTE_DIR),
-    models    = fs.readdirSync(MODEL_DIR);
+    config    = require('config').application,
+    dir       = require('config').directories;
 
 /**
  * Basic setup.
  */
 var app = express();
-app.set('port', process.env.PORT || APP_PORT);
+app.set('port', process.env.PORT || config.port);
 app.use(express.logger('dev'));
+app.use(express.bodyParser());
 app.use(app.router);
 app.db = {};
 
-//Development only.
+/**
+ * Development only.
+ */
 if ('development' == app.get('env')) {
+  console.warn('In Development Mode');
   app.use(express.errorHandler());
+  app.set('views', __dirname + '/public');
+  app.engine('html', require('ejs').renderFile);
 }
 
 /**
- * Sequelize Setup
+ * Models setup.
  */
-var sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
-  host : config.db.host
-});
-
-// Database Models
-models.forEach(function (file) {
-  var filePath  = path.resolve('./', MODEL_DIR, file);
-  var modelName = path.basename(filePath, '.js');
-  var model = sequelize.import(filePath);
-  app.db[modelName] = model;
-});
+app.set('models', require('./models'));
 
 /**
- * API Calls.
+ * API calls.
  * This is pretty neat, turns each route group into essentially a plugin.
  * To extend the api just drop another group of routes in the routes folder, and away we go!
  */
+var routes = fs.readdirSync(dir.routes);
+
 routes.forEach(function (file) {
-  var filePath = path.resolve('./', ROUTE_DIR, file);
+  var filePath = path.resolve('./', dir.routes, file);
   var route = require(filePath);
   route.init(app);
 });
@@ -65,3 +55,5 @@ routes.forEach(function (file) {
  */
 app.listen(app.get('port'));
 console.log('Express server listening on port ' + app.get('port'));
+
+

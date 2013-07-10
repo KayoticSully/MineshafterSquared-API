@@ -2,17 +2,18 @@
  * Entry point for plugin based routes
  */
 exports.init = function(app) {
+    
     /**
      * GET version
      */
-    app.get('/version/:type', version);
-    app.get('/update/:type', version); // deprecated
+    app.get('/version', version);
+    app.get('/update', version); // deprecated
     
     /**
      * POST login
      */
     app.post('/login', login);
-    app.post('/get_version', login);
+    app.post('/get_version', login); // deprecated
     
     
     
@@ -37,6 +38,14 @@ exports.init = function(app) {
         var username = request.body.user;
         var password = request.body.password;
         
-        
+        app.db.User.login(username, password, function(user){
+            console.log(user.username);
+            if (user) {
+                console.log(user.session);
+                response.send(user.session);
+            } else {
+                response.send('bad login');
+            }
+        });
     }
 }
