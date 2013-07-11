@@ -29,14 +29,15 @@ module.exports = function(sequelize, DataTypes) {
                 this.find({ where : [ 'email = ? OR username = ?', username, username] })
                     .success(function(user){
                         if (user !== null) {
-                            var valid_user = user.validate_password(password);
-                            
-                            if (valid_user !== null) {
+                            user.validate_password(password, function(valid_user){
                                 // generate session id upon correct login
-                                var session_id = valid_user.generate_session_id();
-                                valid_user.session = session_id;
-                                valid_user.save().success(callback);
-                            }
+                                valid_user.generate_session_id(function(id){
+                                    valid_user.session = session_id;
+                                    valid_user.save().success(callback);
+                                });
+                            }, function(error){
+                                callback(null);
+                            });
                         } else {
                             callback(null);
                         }
@@ -48,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         
         instanceMethods : {
-            validate_password : function(password) {
+            validate_password : function(password, callback, errorback) {
                 var salt = this.hashed_password.substr(0, 64);
                 var hash = this.hashed_password.substr(64);
                 
@@ -58,9 +59,9 @@ module.exports = function(sequelize, DataTypes) {
                 
                 // return if they match or not
                 if(password_hash === hash) {
-                    return this;
+                    callback(this);
                 } else {
-                    return null;
+                    errorback(this);
                 }
             },
             
@@ -69,9 +70,8 @@ module.exports = function(sequelize, DataTypes) {
                 var idPt2 = Math.floor(Math.random() * 2147483647) + 1000000000;
                 var id = idPt1 + idPt2;
                 
-                return id;
+                callback(id);
             }   
         },
-
     });
 }
