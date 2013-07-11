@@ -2,7 +2,6 @@
  * Entry point for plugin based routes
  */
 exports.init = function(app) {
-    
     /**
      * GET version
      */
@@ -14,8 +13,6 @@ exports.init = function(app) {
      */
     app.post('/login', login);
     app.post('/get_version', login); // deprecated
-    
-    
     
     /**
      * Implementations
