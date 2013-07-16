@@ -1,2 +1,5 @@
 MineshafterSquared-API
 ======================
+
+General Organization
+--------------------
