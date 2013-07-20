@@ -31,7 +31,13 @@ modelFiles.forEach(function (file) {
         var modelName = path.basename(filePath, '.js');
         
         // export model to use in app
-        module.exports[modelName] = sequelize.import(filePath);
+        var modelObject = sequelize.import(filePath);
+        
+        // make sure table exists
+        modelObject.sync();
+        
+        // store model for app
+        module.exports[modelName] = modelObject;
         
         console.log('> ' + file + ' loaded');
     }
@@ -39,7 +45,7 @@ modelFiles.forEach(function (file) {
 
 // Define Relationships
 (function(m){
-    // relationships??
+    m.User.hasMany(m.Token, { as : "Clients" });
 })(module.exports);
 
 // export connection

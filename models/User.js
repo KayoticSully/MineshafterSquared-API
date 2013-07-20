@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
                             user.validate_password(password, function(valid_user){
                                 // generate session id upon correct login
                                 valid_user.generate_session_id(function(id){
-                                    valid_user.session = session_id;
+                                    valid_user.session = id;
                                     valid_user.save().success(callback);
                                 });
                             }, function(error){
