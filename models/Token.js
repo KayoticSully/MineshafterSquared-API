@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
         
         access_token     : {
             type : DataTypes.STRING,
-            allowNull : false,
+            allowNull : true,
             unique : true,
             validate : {
                 is : ["[0-9a-f]",'i'],

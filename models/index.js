@@ -46,6 +46,7 @@ modelFiles.forEach(function (file) {
 // Define Relationships
 (function(m){
     m.User.hasMany(m.Token, { as : "Clients" });
+    m.Token.belongsTo(m.User);
 })(module.exports);
 
 // export connection

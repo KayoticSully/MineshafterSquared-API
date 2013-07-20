@@ -22,28 +22,18 @@ module.exports = function(sequelize, DataTypes) {
         underscored: true,
         
         classMethods: {
-            login : function(username, password, callback) {
+            login : function(username, password, callback, errorback) {
                 var user = null;
                 
                 // Try and find user's record
                 this.find({ where : [ 'email = ? OR username = ?', username, username] })
                     .success(function(user){
                         if (user !== null) {
-                            user.validate_password(password, function(valid_user){
-                                // generate session id upon correct login
-                                valid_user.generate_session_id(function(id){
-                                    valid_user.session = id;
-                                    valid_user.save().success(callback);
-                                });
-                            }, function(error){
-                                callback(null);
-                            });
+                            user.validate_password(password, callback, errorback);
                         } else {
-                            callback(null);
+                            errorback(null);
                         }
-                    }).error(function(error) {
-                        callback(null);
-                    });
+                    }).error(errorback);
                 ;
             }
         },
@@ -65,13 +55,12 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             
-            generate_session_id : function(callback) {
-                var idPt1 = Math.floor(Math.random() * 2147483647) + 1000000000;
-                var idPt2 = Math.floor(Math.random() * 2147483647) + 1000000000;
-                var id = idPt1 + idPt2;
-                
-                callback(id);
-            }   
+            jsonProfile : function(){
+                return {
+                    id : "b70977daa8d0be9dd11e87b6cdce928b",
+                    name: this.username
+                }
+            }
         },
     });
 }

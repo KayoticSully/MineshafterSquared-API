@@ -13,7 +13,7 @@ exports.init = function(app) {
     app.post('/refresh', refresh);
     
     // POST invalidate
-    app.post('/refresh', invalidate);
+    app.post('/invalidate', invalidate);
     
     
     /**
@@ -24,6 +24,7 @@ exports.init = function(app) {
      * - 
      */
     var models = app.get('models');
+    var crypto = require('crypto');
     
     // Authenticate
     // Receives: { agent : { name : Minecraft , version : 1 } , username : username , password : xxxxxxx , clientToken : XX... }
@@ -35,23 +36,111 @@ exports.init = function(app) {
         
         // first validate login creds
         models.User.login(username, password, function(user){
+            // check to see if this user has the client id
+            user.getClients({ where : ['client_token = ?', clientToken]}, [clientToken]).success(function(tokens){
+                if(tokens.length > 0) {
+                    // client id already exists
+                    generateAccessToken(tokens[0], prepareData, error);
+                } else {
+                    // first time connecting from that computer
+                    models.Token.create({client_token : clientToken}).success(function(token){
+                        generateAccessToken(token, prepareData, error);
+                    });
+                }
+            });
             
-        }, function(reason){
-            // TODO Login Failed
-        });
+            function prepareData(token){
+                // make sure token is linked to the user
+                user.setClients([token]).success(respond)
+            }
+            
+            function respond(tokens) {
+                var token = tokens[0];
+                
+                // generate the response message
+                var profile = user.jsonProfile();
+                var json = {
+                    accessToken : token.access_token,
+                    clientToken : token.client_token,
+                    selectedProfile : profile,
+                    availableProfiles : [profile]
+                };
+                
+                // send it off
+                response.send(json);
+            }
+        }, error);
+        
+        function error(reason) {
+            // respond with nothing
+            response.send("");
+        }
     }
     
     // Refresh 
     // Receives: { clientToken : XX... , accessToken : XX... }
     // Responds: { accessToken : XX... , clientToken : XX... , selectedProfile : { id : XX... , name : username } }
     function refresh(request, response){
+        var clientToken = request.body.clientToken;
+        var accessToken = request.body.accessToken;
         
+        // retrieve the Token set
+        models.Token.find({ where : { client_token : clientToken, access_token : accessToken }}).success(function(token){
+            if (token) {
+                generateAccessToken(token, function(token){
+                    // generate the response message
+                    token.getUser().success(function(user){
+                        var profile = user.jsonProfile();
+                        
+                        var json = {
+                            accessToken : token.access_token,
+                            clientToken : token.client_token,
+                            selectedProfile : profile
+                        };
+                        
+                        // send it off
+                        response.send(json);
+                    });
+                }, error); 
+            } else {
+                error("no token");
+            }
+        });
+        
+        function error(reason) {
+            // respond with nothing
+            console.log(reason);
+            response.send("");
+        }
     }
     
     // Invalidate
     // Receives: { accessToken : XX... , clientToken : XX... }
     // Responds: Nothing
     function invalidate(request, response){
+        var clientToken = request.body.clientToken;
+        var accessToken = request.body.accessToken;
         
+        // retrieve the Token set
+        models.Token.find({ where : { client_token : clientToken, access_token : accessToken }}).success(function(token){
+            if (token) {
+                token.destroy().error(function(){
+                    console.log("Could Not Delete Token");
+                });
+            }
+            
+            response.send('');
+        });
     }
+    
+    /**
+     * Utility Functions
+     */
+    function generateAccessToken(token, callback, errorback) {
+        console.log("Gen Token");
+        crypto.randomBytes(16, function(ex, buf){
+            token.access_token = buf.toString('hex');
+            token.save().success(callback).error(errorback);
+        });
+    }   
 }
