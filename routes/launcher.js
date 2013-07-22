@@ -15,6 +15,8 @@ exports.init = function(app) {
     // Version
     function version(request, response){
         // get launcher version
+        // TODO: Pull version number from database
+        //       Or should it be hardcoded?
         response.send("2");
     }
 }
