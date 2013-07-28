@@ -3,13 +3,20 @@
  */
 exports.init = function(app) {
     /**
-     * GET ???
+     * GET Skin
      */
-    app.get('/textures/', something);
+    app.get('/skin', fetchSkin);
+    
+    /**
+     * GET Cloak
+     */
+    app.get('/skin', fetchCloak);
     
     
     /**
      * Implementations
      */
-    function something(){}
+    function fetchSkin(){}
+    
+    function fetchCloak(){}
 }

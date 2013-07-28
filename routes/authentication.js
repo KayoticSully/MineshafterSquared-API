@@ -36,22 +36,41 @@ exports.init = function(app) {
         
         // first validate login creds
         models.User.login(username, password, function(user){
-            // check to see if this user has the client id
-            user.getClients({ where : ['client_token = ?', clientToken]}, [clientToken]).success(function(tokens){
-                if(tokens.length > 0) {
-                    // client id already exists
-                    generateAccessToken(tokens[0], prepareData, error);
+            
+            // make sure the user has a UUID
+            if (user.uuid == null) {
+                generateToken(function(token){
+                    user.uuid = token;
+                    user.save().success(getClients).error(error);
+                }, error);
+            } else {
+                getClients(user);
+            }
+            
+            function getClients(user){
+                if (user != null) {
+                    // check to see if this user has the client id
+                    user.getClients({ where : ['client_token = ?', clientToken]}, [clientToken]).success(function(tokens){
+                        if(tokens.length > 0) {
+                            console.log("token");
+                            // client id already exists
+                            generateAccessToken(tokens[0], prepareData, error);
+                        } else {
+                            console.log("GENGENGENTOKEN");
+                            // first time connecting from that computer
+                            models.Token.create({client_token : clientToken}).success(function(token){
+                                generateAccessToken(token, prepareData, error);
+                            }).error(error);
+                        }
+                    }).error(error); 
                 } else {
-                    // first time connecting from that computer
-                    models.Token.create({client_token : clientToken}).success(function(token){
-                        generateAccessToken(token, prepareData, error);
-                    });
+                    error("Bad Login");
                 }
-            });
+            }
             
             function prepareData(token){
                 // make sure token is linked to the user
-                user.setClients([token]).success(respond)
+                user.setClients([token]).success(respond).error(error);
             }
             
             function respond(tokens) {
@@ -72,8 +91,8 @@ exports.init = function(app) {
         }, error);
         
         function error(reason) {
-            // respond with nothing
-            response.send("");
+            console.log(reason);
+            response.send("Bad login");
         }
     }
     
@@ -137,10 +156,20 @@ exports.init = function(app) {
      * Utility Functions
      */
     function generateAccessToken(token, callback, errorback) {
-        console.log("Gen Token");
-        crypto.randomBytes(16, function(ex, buf){
-            token.access_token = buf.toString('hex');
+        generateToken(function(tokenString) {
+            token.access_token = tokenString;
             token.save().success(callback).error(errorback);
         });
-    }   
+    }
+    
+    function generateToken(callback, errorback) {
+        crypto.randomBytes(16, function(ex, buf) {
+            if (ex) {
+                errorback(ex);
+            } else {
+                var token = buf.toString('hex');
+                callback(token);
+            }
+        });
+    }
 }

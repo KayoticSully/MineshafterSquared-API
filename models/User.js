@@ -15,7 +15,16 @@ module.exports = function(sequelize, DataTypes) {
         last_game_login     : DataTypes.INTEGER,
         last_web_login      : DataTypes.INTEGER,
         premium             : DataTypes.BOOLEAN,
-        remember_me         : DataTypes.STRING
+        remember_me         : DataTypes.STRING,
+        uuid                : {
+            type : DataTypes.STRING,
+            allowNull : true,
+            unique : true,
+            validate : {
+                is : ["[0-9a-f]",'i'],
+                len : 32
+            }
+        }
     },
     // configuration
     {
@@ -57,7 +66,7 @@ module.exports = function(sequelize, DataTypes) {
             
             jsonProfile : function(){
                 return {
-                    id : "b70977daa8d0be9dd11e87b6cdce928b",
+                    id : this.uuid,
                     name: this.username
                 }
             }
