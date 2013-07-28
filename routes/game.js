@@ -3,13 +3,13 @@
  */
 exports.init = function(app) {
     /**
-     * GET game/joinserver
+     * API Calls
      */
+    
+    // GET game/joinserver
     app.get('/game/joinserver', joinserver);
     
-    /**
-     * GET game/checkserver
-     */
+    // GET game/checkserver
     app.get('/game/checkserver', checkserver);
     
     

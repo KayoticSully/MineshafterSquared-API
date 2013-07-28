@@ -3,9 +3,11 @@
  */
 exports.init = function(app) {
     /**
-     * GET home page.
+     * API Calls
      */
-    app.get('/', function(req, res){
-        res.render('test.html');
+    
+    // GET index
+    app.get('/', function(request, response){
+        response.redirect("http://mineshaftersquared.com");
     });
 }
