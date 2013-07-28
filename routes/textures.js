@@ -5,18 +5,22 @@ exports.init = function(app) {
     /**
      * GET Skin
      */
-    app.get('/skin', fetchSkin);
+    app.get('/skin/:username', fetchSkin);
     
     /**
      * GET Cloak
      */
-    app.get('/skin', fetchCloak);
+    app.get('/cloak/:username', fetchCloak);
     
     
     /**
      * Implementations
      */
-    function fetchSkin(){}
+    function fetchSkin(request, response) {
+        
+    }
     
-    function fetchCloak(){}
+    function fetchCloak(request, response) {
+        
+    }
 }

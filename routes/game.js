@@ -3,9 +3,13 @@
  */
 exports.init = function(app) {
     /**
-     * GET ???
+     * GET game/joinserver
      */
     app.get('/game/joinserver', joinserver);
+    
+    /**
+     * GET game/checkserver
+     */
     app.get('/game/checkserver', checkserver);
     
     
@@ -13,20 +17,15 @@ exports.init = function(app) {
      * Implementations
      */
     var models = app.get('models');
-    var url = require('url');
     
     /**
      * Note: The sessionId is sent in as token:authToken:UUID
      */
     function joinserver(request, response){
-        // get query string data 
-        var url_parts = url.parse(request.url, true);
-        var query     = url_parts.query;
-        
-        // important input
-        var username  = query.user;
-        var sessionId = query.sessionId.split(':');
-        var serverId  = query.serverId;
+        // get input
+        var username  = request.query.user;
+        var sessionId = request.query.sessionId.split(':');
+        var serverId  = request.query.serverId;
         
         // first verify the user information if valid
         models.User.find({ where : ['username = ? AND uuid = ?', username, sessionId[2]] }).success(function(user){
@@ -56,13 +55,9 @@ exports.init = function(app) {
     }
     
     function checkserver(request, response){
-        // get query string data 
-        var url_parts = url.parse(request.url, true);
-        var query     = url_parts.query;
-        
-        // important input
-        var username  = query.user;
-        var serverId  = query.serverId;
+        // get input
+        var username  = request.query.user;
+        var serverId  = request.query.serverId;
         
         // see if user has been validated for this server
         models.User.find({ where : ['username = ? AND server = ?', username, serverId] }).success(function(user){
