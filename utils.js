@@ -15,4 +15,7 @@ module.exports.logger = function(request, response, next) {
     // log the originating IP address
     var hops = request.ips.length;
     message += "FROM " + request.ips[hops-1];
+    
+    console.log(message);
+    next();
 }
