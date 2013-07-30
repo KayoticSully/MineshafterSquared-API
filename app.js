@@ -27,8 +27,8 @@ app.use(app.router);
 if ('development' == app.get('env')) {
   console.warn('In Development Mode');
   app.use(express.errorHandler());
-  app.set('views', __dirname + '/public');
-  app.engine('html', require('ejs').renderFile);
+//  app.set('views', __dirname + '/public');
+//  app.engine('html', require('ejs').renderFile);
 }
 
 /**
