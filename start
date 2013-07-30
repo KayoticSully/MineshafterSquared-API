@@ -1,2 +1,0 @@
-#!/bin/bash
-forever start app.js -l /var/log/mineshaftersquared-api/access.log -o /var/log/mineshaftersquared-api/output.log -e /var/mineshaftersquared-api/error.log

@@ -1,0 +1,24 @@
+{
+    "database" : {
+        "username": "username",
+        "password": "password",
+        "name": "Database Name",
+        "options" : {
+            "host" : "database server address",
+            "logging" : false,
+            "pool" : {
+                "maxConnections" : 5,
+                "maxIdleTime" : 30
+            },
+        }
+    },
+    
+    "directories" : {
+        "models" : "models",
+        "routes" : "routes"
+    },
+    
+    "application" : {
+        "port" : 3000
+    }
+}

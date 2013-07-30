@@ -17,7 +17,6 @@ var
  */
 var app = express();
 app.set('port', process.env.PORT || config.port);
-
 app.use(express.bodyParser());
 app.use(app.router);
 

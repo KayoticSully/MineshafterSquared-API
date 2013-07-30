@@ -4,7 +4,7 @@
  * based off of examples from: http://redotheweb.com/2013/02/20/sequelize-the-javascript-orm-in-practice.html
  */
 var Sequelize  = require('sequelize');
-var db       = require('config').database;
+var db         = require('config').database;
 
 // init databse connection
 var sequelize = new Sequelize(
