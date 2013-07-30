@@ -52,11 +52,9 @@ exports.init = function(app) {
                     // check to see if this user has the client id
                     user.getClients({ where : ['client_token = ?', clientToken]}, [clientToken]).success(function(tokens){
                         if(tokens.length > 0) {
-                            console.log("token");
                             // client id already exists
                             generateAccessToken(tokens[0], prepareData, error);
                         } else {
-                            console.log("GENGENGENTOKEN");
                             // first time connecting from that computer
                             models.Token.create({client_token : clientToken}).success(function(token){
                                 generateAccessToken(token, prepareData, error);
