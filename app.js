@@ -10,7 +10,8 @@ var
     path      = require('path'),
     express   = require('express'),
     config    = require('config').application,
-    dir       = require('config').directories;
+    dir       = require('config').directories,
+    utils     = require('./utils');
 
 /**
  * Basic setup.
@@ -32,7 +33,7 @@ if ('development' == app.get('env')) {
 } else if ('production' == app.get('env')) {
   
   console.log("Loading in Production Mode");
-  app.use(express.logger());
+  app.use(utils.logger);
   
 }
 
