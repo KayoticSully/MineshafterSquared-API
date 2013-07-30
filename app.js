@@ -17,18 +17,24 @@ var
  */
 var app = express();
 app.set('port', process.env.PORT || config.port);
-app.use(express.logger('dev'));
+
 app.use(express.bodyParser());
 app.use(app.router);
 
 /**
- * Development only.
+ * Different Modes
  */
 if ('development' == app.get('env')) {
-  console.warn('In Development Mode');
+  
+  console.warn('Loading in Development Mode');
+  app.use(express.logger('dev'));
   app.use(express.errorHandler());
-//  app.set('views', __dirname + '/public');
-//  app.engine('html', require('ejs').renderFile);
+  
+} else if ('production' == app.get('env')) {
+  
+  console.log("Loading in Production Mode");
+  app.use(express.logger());
+  
 }
 
 /**
