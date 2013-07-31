@@ -17,8 +17,13 @@ var
  */
 var app = express();
 app.set('port', process.env.PORT || config.port);
+
+// Setup views and static files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/public'));
+
+// Setup request handling
 app.use(express.bodyParser());
 app.use(app.router);
 
