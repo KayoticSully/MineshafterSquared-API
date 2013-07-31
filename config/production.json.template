@@ -20,5 +20,11 @@
     
     "application" : {
         "port" : 3000
+    },
+    
+    "tumblr" : {
+        "apiUrl" : "http://api.tumblr.com/v2/blog/",
+        "blogUrl" : "mineshaftersquared.tumblr.com",
+        "oauthKey" : "qbyWHm4qD00vblTRalf3sO2LRwuAnVqZkh7F6mkhxGVlr6PLow"
     }
 }

@@ -17,6 +17,8 @@ var
  */
 var app = express();
 app.set('port', process.env.PORT || config.port);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 app.use(express.bodyParser());
 app.use(app.router);
 

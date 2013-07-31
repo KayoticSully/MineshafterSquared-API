@@ -1,0 +1,14 @@
+doctype 5
+html(lang="en")
+    head
+        title= "Mineshafter Squared News"
+    body
+        h1 Mineshafter Squared News (Beta)
+        p This is a work in progress...
+        
+        - for(var i in posts) {
+            - var post = posts[i]
+            h2
+                a(href=post.post_url)=post.title
+            div!= post.body
+        - }
