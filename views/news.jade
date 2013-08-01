@@ -9,7 +9,11 @@ html(lang="en")
         
         - for(var i in posts) {
             - var post = posts[i]
+            - var date = new Date(post.date);
             h2
                 a(href=post.post_url)=post.title
-            div!= post.body
+            
+            div.meta=date.toGMTString()
+            
+            div.body!= post.body
         - }
