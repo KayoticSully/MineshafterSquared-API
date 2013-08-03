@@ -20,10 +20,14 @@ exports.init = function(app) {
      * Implementations
      */
     function fetchSkin(request, response) {
-        response.send("Feature not yet supported.");
+        response.writeHead(307, { // Temporary Redirect
+            'Location': 'http://mineshaftersquared.com/game/get_skin/' + request.params.username
+        });
     }
     
     function fetchCloak(request, response) {
-        response.send("Feature not yet supported.");
+        response.writeHead(307, {
+            'Location': 'http://mineshaftersquared.com/game/get_cloak/' + request.params.username
+        });
     }
 }
